@@ -46,6 +46,10 @@
   color: white;
 }
 
+.workflow-header .short-title {
+  display: none;
+}
+
 .header-title-group {
   display: flex;
   align-items: center;
@@ -522,6 +526,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  min-width: 120px;
 }
 
 .dimension-workflow-field input {
@@ -532,14 +537,152 @@
 /* Responsive tweaks */
 @media (max-width: 1024px) {
   .workflow-sidebar {
-    width: 80px;
-    padding: 1rem 0.5rem;
+    width: 64px;
+    padding: 1rem 0;
+    align-items: center;
   }
   .step-item {
+    width: 44px;
+    height: 44px;
     justify-content: center;
-    padding: 1rem 0;
+    padding: 0;
+    border-radius: 50%;
+    gap: 0;
   }
-  .step-item span:not(.step-number) {
+  .step-label-container {
     display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .workflow-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .workflow-header .full-title {
+    display: none;
+  }
+
+  .workflow-header .short-title {
+    display: block;
+    font-size: 1.1rem;
+  }
+
+  .header-buttons {
+    gap: 1rem;
+  }
+
+  .progress-container {
+    min-width: 120px;
+  }
+
+  .progress-text {
+    font-size: 0.65rem;
+  }
+
+  .exit-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .workflow-sidebar {
+    width: 56px;
+  }
+
+  .workflow-main {
+    padding: 1rem;
+  }
+
+  .question-card {
+    padding: 1.5rem;
+    border-radius: 20px;
+    min-height: auto;
+  }
+
+  .question-label {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .workflow-input-group {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .workflow-text-input, 
+  .workflow-textarea {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  .workflow-checkbox-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dimensions-workflow-row {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .navigation-footer {
+    padding: 0 1rem 2rem 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .nav-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .nav-btn-text {
+    /* We'll keep text but maybe smaller */
+  }
+}
+
+@media (max-width: 480px) {
+  .workflow-header {
+    gap: 0.5rem;
+  }
+  
+  .progress-container {
+    display: none;
+  }
+
+  .nav-btn-text {
+    display: none;
+  }
+
+  .nav-btn {
+    padding: 0.75rem 1rem;
+  }
+
+  .nav-btn-icon {
+    font-size: 1.2rem;
+  }
+
+  .pain-scale-grid {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .pain-btn {
+    flex: 0 0 calc(20% - 0.4rem);
+    aspect-ratio: 1;
+  }
+
+  .workflow-sidebar {
+    width: 48px;
+  }
+
+  .step-item {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  .step-number {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
   }
 }

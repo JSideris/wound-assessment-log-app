@@ -15,6 +15,8 @@ export default defineConfig({
         short_name: 'WoundLog',
         description: 'Offline wound assessment logging app for medical professionals',
         theme_color: '#2c3e50',
+        start_url: './',
+        display: 'standalone',
         icons: [
           {
             src: 'icon.png',

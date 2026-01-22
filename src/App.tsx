@@ -8,11 +8,11 @@ import './App.css';
 import { useState } from 'react';
 
 function AppContent() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(window.innerWidth < 768);
   const { isWorkflowActive, isPrinting } = useForm();
 
   return (
-    <div className={`app-layout ${isPrinting ? 'print-mode' : ''}`}>
+    <div className={`app-layout ${isPrinting ? 'print-mode' : ''} ${sidebarCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}`}>
       <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
       <div className="main-wrapper">
         <button 

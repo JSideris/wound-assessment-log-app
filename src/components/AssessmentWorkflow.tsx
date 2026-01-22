@@ -791,8 +791,9 @@ export const AssessmentWorkflow = () => {
     <div className="workflow-overlay">
       <header className="workflow-header">
         <div className="header-title-group">
-          <h2>ASSESSMENT WORKFLOW</h2>
-          {isFollowupMode && <span className="followup-badge">FOLLOW-UP MODE</span>}
+          <h2 className="full-title">ASSESSMENT WORKFLOW</h2>
+          <h2 className="short-title">ASSESSMENT</h2>
+          {isFollowupMode && <span className="followup-badge">FOLLOW-UP</span>}
         </div>
         <div className="header-buttons">
           <div className="progress-container">
@@ -839,13 +840,17 @@ export const AssessmentWorkflow = () => {
               onClick={handlePrev}
               disabled={currentStepIndex === 0}
             >
-              ← PREVIOUS
+              <span className="nav-btn-icon">←</span>
+              <span className="nav-btn-text">PREVIOUS</span>
             </button>
             <button 
               className={`nav-btn ${currentStepIndex === STEPS.length - 1 ? 'finish' : 'next'}`}
               onClick={handleNext}
             >
-              {currentStepIndex === STEPS.length - 1 ? 'FINISH & SAVE' : 'NEXT STEP →'}
+              <span className="nav-btn-text">
+                {currentStepIndex === STEPS.length - 1 ? 'FINISH & SAVE' : 'NEXT'}
+              </span>
+              <span className="nav-btn-icon">→</span>
             </button>
           </div>
         </main>

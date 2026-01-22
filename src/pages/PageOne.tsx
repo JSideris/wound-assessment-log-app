@@ -1013,7 +1013,7 @@ export const PageOne = () => {
                             <div style={{ flex: 1 }}>
                                 <textarea 
                                   className="notes-area" 
-                                  style={{ height: '140px', width: '100%' }} 
+                                  style={{ height: '120px', width: '100%' }} 
                                   placeholder="Additional observations and notes..."
                                   value={formData.notes}
                                   onChange={(e) => updateField('notes', e.target.value)}

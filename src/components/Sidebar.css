@@ -16,6 +16,25 @@
   border-right: none;
 }
 
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1500;
+    height: 100vh;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.collapsed {
+    width: 280px; /* Keep width for overlay */
+    transform: translateX(-100%);
+    border-right: none;
+    overflow: visible; /* Allow shadow or tab visibility if needed, though tab is in App.css */
+  }
+}
+
 .sidebar-header {
   padding: 1rem;
   border-bottom: 1px solid #2c3e50;
