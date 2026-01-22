@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wound Assessment Log</title>
+    <style>
+        @font-face {
+            font-family: 'Source Sans 3';
+            src: url('public/fonts/source-sans-3-400.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Source Sans 3';
+            src: url('public/fonts/source-sans-3-600.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Source Sans 3';
+            src: url('public/fonts/source-sans-3-700.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        :root {
+            --primary: #1a365d;
+            --primary-light: #2c5282;
+            --accent: #c53030;
+            --border: #cbd5e0;
+            --border-dark: #a0aec0;
+            --bg-light: #f7fafc;
+            --bg-header: #e2e8f0;
+            --text: #2d3748;
+            --text-muted: #718096;
+        }
+        
+        body {
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--text);
+            background: #edf2f7;
+            padding: 20px;
+        }
+        
+        .form-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Header */
+        .form-header {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        
+        /* Main layout */
+        .form-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .left-column, .right-column {
+            padding: 0;
+        }
+        
+        .left-column {
+            border-right: 2px solid var(--border-dark);
+        }
+        
+        /* Section styling */
+        .section {
+            border-bottom: 1px solid var(--border);
+            padding: 12px 16px;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+            margin-bottom: 10px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+        
+        /* Patient info row */
+        .patient-info-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .patient-info-row .section {
+            border-bottom: none;
+        }
+        
+        .patient-info-row .left-column .section {
+            border-right: 1px solid var(--border);
+        }
+        
+        /* Top header with patient details */
+        .top-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            background: var(--bg-light);
+            border-bottom: 2px solid var(--border-dark);
+        }
+        
+        .top-header-left {
+            padding: 12px 16px;
+            border-right: 1px solid var(--border);
+        }
+        
+        .top-header-right {
+            padding: 12px 16px;
+        }
+        
+        /* Form fields */
+        .field-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+        
+        .field-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .field-label {
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        
+        .field-input {
+            flex: 1;
+            border: none;
+            border-bottom: 1px solid var(--border-dark);
+            padding: 4px 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: transparent;
+        }
+        
+        .field-input:focus {
+            outline: none;
+            border-bottom-color: var(--primary);
+            background: var(--bg-light);
+        }
+        
+        .field-input.short {
+            max-width: 80px;
+        }
+        
+        .field-input.medium {
+            max-width: 150px;
+        }
+        
+        /* Inline fields */
+        .inline-fields {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .inline-field {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* Day of week */
+        .days-row {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+        
+        .day {
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--border-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .day:hover {
+            background: var(--bg-header);
+        }
+        
+        .day.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Checkboxes */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        
+        .checkbox-item label {
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        /* Wound type grid */
+        .wound-type-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px 12px;
+        }
+        
+        /* Dimensions */
+        .dimensions-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .dimension-field {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .dimension-field input {
+            width: 60px;
+            text-align: center;
+        }
+        
+        .dimension-field .unit {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        /* Tissue type row */
+        .tissue-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .tissue-field {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .tissue-field input {
+            width: 40px;
+            text-align: center;
+            border: none;
+            border-bottom: 1px solid var(--border-dark);
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .tissue-field input:focus {
+            outline: none;
+            border-bottom-color: var(--primary);
+        }
+        
+        /* Color row */
+        .color-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .color-row .color-label {
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        /* Notes area */
+        .notes-area {
+            width: 100%;
+            min-height: 100px;
+            border: 1px solid var(--border);
+            padding: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+        }
+        
+        .notes-area:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* Pain level */
+        .pain-scale {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pain-scale input {
+            width: 50px;
+            text-align: center;
+        }
+        
+        /* Tunneling/Undermining */
+        .tunnel-row {
+            display: grid;
+            grid-template-columns: auto 1fr auto 1fr;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        /* Other field inline */
+        .other-field {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .other-field input {
+            flex: 1;
+        }
+        
+        /* Text area for multi-line inputs */
+        .text-area-field {
+            width: 100%;
+            min-height: 50px;
+            border: 1px solid var(--border);
+            padding: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            resize: vertical;
+            margin-top: 6px;
+        }
+        
+        .text-area-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .form-container {
+                box-shadow: none;
+            }
+            
+            .field-input:focus,
+            .notes-area:focus,
+            .text-area-field:focus {
+                background: transparent;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .left-column {
+                border-right: none;
+                border-bottom: 2px solid var(--border-dark);
+            }
+            
+            .top-header {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-header-left {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .wound-type-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">Wound Assessment Log</div>
+        
+        <!-- Top Patient Info Section -->
+        <div class="top-header">
+            <div class="top-header-left">
+                <div class="inline-fields" style="margin-bottom: 10px;">
+                    <div class="inline-field">
+                        <span class="field-label">Bed/Room#:</span>
+                        <input type="text" class="field-input short">
+                    </div>
+                    <div class="inline-field" style="flex: 1;">
+                        <span class="field-label">Patient Name:</span>
+                        <input type="text" class="field-input">
+                    </div>
+                    <div class="inline-field">
+                        <span class="field-label">ID/MRN:</span>
+                        <input type="text" class="field-input medium">
+                    </div>
+                </div>
+                <div class="inline-fields" style="margin-bottom: 10px;">
+                    <div class="inline-field">
+                        <span class="field-label">Age:</span>
+                        <input type="text" class="field-input short">
+                    </div>
+                    <div class="inline-field">
+                        <span class="field-label">Sex:</span>
+                        <input type="text" class="field-input short">
+                    </div>
+                    <div class="inline-field" style="flex: 1;">
+                        <span class="field-label">Address:</span>
+                        <input type="text" class="field-input">
+                    </div>
+                </div>
+                <div class="field-row">
+                    <span class="field-label">Contact Information:</span>
+                    <input type="text" class="field-input">
+                </div>
+            </div>
+            <div class="top-header-right">
+                <div class="field-row">
+                    <span class="field-label">Date:</span>
+                    <input type="date" class="field-input">
+                </div>
+                <div class="days-row">
+                    <div class="day" onclick="this.classList.toggle('selected')">M</div>
+                    <div class="day" onclick="this.classList.toggle('selected')">T</div>
+                    <div class="day" onclick="this.classList.toggle('selected')">W</div>
+                    <div class="day" onclick="this.classList.toggle('selected')">T</div>
+                    <div class="day" onclick="this.classList.toggle('selected')">F</div>
+                    <div class="day" onclick="this.classList.toggle('selected')">S</div>
+                    <div class="day" onclick="this.classList.toggle('selected')">S</div>
+                </div>
+                <div class="field-row" style="margin-top: 10px;">
+                    <span class="field-label">Time:</span>
+                    <input type="time" class="field-input medium">
+                    <select class="field-input short" style="width: auto;">
+                        <option>am</option>
+                        <option>pm</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Two-Column Layout -->
+        <div class="form-body">
+            <!-- Left Column -->
+            <div class="left-column">
+                <div class="section">
+                    <div class="section-title">Medical History / Allergies</div>
+                    <textarea class="text-area-field" placeholder="Enter medical history and allergies..."></textarea>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Substance Abuse</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="alcohol">
+                            <label for="alcohol">Alcohol</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="tobacco">
+                            <label for="tobacco">Tobacco</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="drugs">
+                            <label for="drugs">Drugs</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="inhalants">
+                            <label for="inhalants">Inhalants</label>
+                        </div>
+                    </div>
+                    <div class="other-field">
+                        <span class="field-label">Other:</span>
+                        <input type="text" class="field-input">
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Interventions and Treatments</div>
+                    <div class="field-row">
+                        <span class="field-label">Cleansing solution and technique:</span>
+                    </div>
+                    <textarea class="text-area-field" style="min-height: 40px;"></textarea>
+                    
+                    <div class="field-row" style="margin-top: 10px;">
+                        <span class="field-label">Debridement method and extent:</span>
+                    </div>
+                    <textarea class="text-area-field" style="min-height: 40px;"></textarea>
+                    
+                    <div class="field-row" style="margin-top: 10px;">
+                        <span class="field-label">Dressing type and frequency:</span>
+                    </div>
+                    <textarea class="text-area-field" style="min-height: 40px;"></textarea>
+                    
+                    <div class="field-row" style="margin-top: 10px;">
+                        <span class="field-label">Adjunctive therapies:</span>
+                    </div>
+                    <textarea class="text-area-field" style="min-height: 40px;"></textarea>
+                    
+                    <div class="other-field">
+                        <span class="field-label">Other:</span>
+                        <input type="text" class="field-input">
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Patient Education Provided</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="wound-care">
+                            <label for="wound-care">Wound care instructions</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="nutrition">
+                            <label for="nutrition">Nutrition advice</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="smoking">
+                            <label for="smoking">Smoking cessation</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="offloading">
+                            <label for="offloading">Offloading techniques</label>
+                        </div>
+                    </div>
+                    <div class="other-field">
+                        <span class="field-label">Other:</span>
+                        <input type="text" class="field-input">
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Signs and Symptoms of Infection</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="increased-pain">
+                            <label for="increased-pain">Increased pain</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="erythema">
+                            <label for="erythema">Erythema</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="edema">
+                            <label for="edema">Edema</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="warmth">
+                            <label for="warmth">Warmth</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fever">
+                            <label for="fever">Fever</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="purulent">
+                            <label for="purulent">Purulent drainage</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="delayed">
+                            <label for="delayed">Delayed healing</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="friable">
+                            <label for="friable">Friable granulation tissue</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="foul">
+                            <label for="foul">Foul odor</label>
+                        </div>
+                    </div>
+                    <div class="other-field">
+                        <span class="field-label">Other:</span>
+                        <input type="text" class="field-input">
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Photo Taken</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="photo-yes" name="photo">
+                            <label for="photo-yes">Yes</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="photo-no" name="photo">
+                            <label for="photo-no">No</label>
+                        </div>
+                    </div>
+                    <div class="field-row" style="margin-top: 8px;">
+                        <span class="field-label">Date and Time of Photos:</span>
+                        <input type="text" class="field-input">
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Follow-Up and Next Steps</div>
+                    <div class="checkbox-group" style="flex-direction: column; gap: 8px;">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="continue">
+                            <label for="continue">Continue current treatment</label>
+                        </div>
+                        <div class="inline-field">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="modify">
+                                <label for="modify">Modify treatment plan (specify):</label>
+                            </div>
+                            <input type="text" class="field-input">
+                        </div>
+                        <div class="inline-field">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="consult">
+                                <label for="consult">Consult specialist (specify):</label>
+                            </div>
+                            <input type="text" class="field-input">
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="labs">
+                            <label for="labs">Order labs/tests:</label>
+                        </div>
+                    </div>
+                    <div class="other-field">
+                        <span class="field-label">Other:</span>
+                        <input type="text" class="field-input">
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Next Scheduled Assessment</div>
+                    <div class="field-row">
+                        <span class="field-label">Date & Time:</span>
+                        <input type="datetime-local" class="field-input">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="right-column">
+                <div class="section">
+                    <div class="field-row">
+                        <span class="field-label">Date of Injury / Onset:</span>
+                        <input type="date" class="field-input">
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Type of Wound</div>
+                    <div class="wound-type-grid">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pressure">
+                            <label for="pressure">Pressure ulcer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="surgical">
+                            <label for="surgical">Surgical wound</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="diabetic">
+                            <label for="diabetic">Diabetic ulcer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="burn">
+                            <label for="burn">Burn</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="traumatic">
+                            <label for="traumatic">Traumatic wound</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="venous">
+                            <label for="venous">Venous ulcer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="arterial">
+                            <label for="arterial">Arterial ulcer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="abrasion">
+                            <label for="abrasion">Abrasion</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="infected">
+                            <label for="infected">Infected wound</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="laceration">
+                            <label for="laceration">Laceration</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="puncture">
+                            <label for="puncture">Puncture</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="acute">
+                            <label for="acute">Acute wound</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="chronic">
+                            <label for="chronic">Chronic wound</label>
+                        </div>
+                    </div>
+                    <div class="other-field">
+                        <span class="field-label">Other:</span>
+                        <input type="text" class="field-input">
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Location of the Wound</div>
+                    <input type="text" class="field-input" style="width: 100%;">
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Wound Dimensions</div>
+                    <div class="dimensions-row">
+                        <div class="dimension-field">
+                            <span class="field-label">Length:</span>
+                            <input type="number" class="field-input" step="0.1">
+                            <span class="unit">cm</span>
+                        </div>
+                        <div class="dimension-field">
+                            <span class="field-label">Width:</span>
+                            <input type="number" class="field-input" step="0.1">
+                            <span class="unit">cm</span>
+                        </div>
+                        <div class="dimension-field">
+                            <span class="field-label">Depth:</span>
+                            <input type="number" class="field-input" step="0.1">
+                            <span class="unit">cm</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Wound Appearance</div>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Tissue Type (estimate %):</p>
+                    <div class="tissue-row">
+                        <div class="tissue-field">
+                            <input type="number" min="0" max="100">
+                            <span>% Epithelial</span>
+                        </div>
+                        <div class="tissue-field">
+                            <input type="number" min="0" max="100">
+                            <span>% Granulation</span>
+                        </div>
+                        <div class="tissue-field">
+                            <input type="number" min="0" max="100">
+                            <span>% Slough</span>
+                        </div>
+                        <div class="tissue-field">
+                            <input type="number" min="0" max="100">
+                            <span>% Necrotic</span>
+                        </div>
+                    </div>
+                    <div class="color-row">
+                        <span class="color-label">Color:</span>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pink">
+                            <label for="pink">Pink</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="red">
+                            <label for="red">Red</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="yellow">
+                            <label for="yellow">Yellow</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="black">
+                            <label for="black">Black</label>
+                        </div>
+                        <div class="inline-field">
+                            <span class="field-label">Other:</span>
+                            <input type="text" class="field-input" style="width: 80px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Wound Edges</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="well-defined">
+                            <label for="well-defined">Well-defined</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="irregular">
+                            <label for="irregular">Irregular</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="rolled">
+                            <label for="rolled">Rolled (epibole)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="undermined">
+                            <label for="undermined">Undermined</label>
+                        </div>
+                    </div>
+                    <div class="other-field">
+                        <span class="field-label">Other:</span>
+                        <input type="text" class="field-input">
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Exudate</div>
+                    <div style="margin-bottom: 8px;">
+                        <span class="field-label" style="display: block; margin-bottom: 4px;">Amount:</span>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="none">
+                                <label for="none">None</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="light">
+                                <label for="light">Light</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="moderate">
+                                <label for="moderate">Moderate</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="heavy">
+                                <label for="heavy">Heavy</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <span class="field-label" style="display: block; margin-bottom: 4px;">Type:</span>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="serous">
+                                <label for="serous">Serous</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sanguineous">
+                                <label for="sanguineous">Sanguineous</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="purulent-ex">
+                                <label for="purulent-ex">Purulent</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="mixed">
+                                <label for="mixed">Mixed</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="field-label" style="display: block; margin-bottom: 4px;">Consistency:</span>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="thin">
+                                <label for="thin">Thin</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="thick">
+                                <label for="thick">Thick</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sticky">
+                                <label for="sticky">Sticky</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Odor</div>
+                    <div class="checkbox-group" style="align-items: center;">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="odor-none">
+                            <label for="odor-none">None</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="mild">
+                            <label for="mild">Mild</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="odor-moderate">
+                            <label for="odor-moderate">Moderate</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="strong">
+                            <label for="strong">Strong</label>
+                        </div>
+                        <div class="inline-field">
+                            <span class="field-label">Characteristics:</span>
+                            <input type="text" class="field-input" style="width: 100px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Pain Level</div>
+                    <div class="pain-scale">
+                        <input type="number" class="field-input" min="0" max="10" placeholder="0-10">
+                        <span style="color: var(--text-muted); font-size: 12px;">(0-10)</span>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Periwound Skin</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="intact">
+                            <label for="intact">Intact</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="peri-erythema">
+                            <label for="peri-erythema">Erythema</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="macerated">
+                            <label for="macerated">Macerated</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="indurated">
+                            <label for="indurated">Indurated</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="excoriated">
+                            <label for="excoriated">Excoriated</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="dry">
+                            <label for="dry">Dry/Flaky</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="callused">
+                            <label for="callused">Callused</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="hyper">
+                            <label for="hyper">Hyper-pigmented</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Tunneling</div>
+                    <div class="tunnel-row">
+                        <span class="field-label">Location:</span>
+                        <input type="text" class="field-input">
+                        <span class="field-label">Depth:</span>
+                        <div class="inline-field">
+                            <input type="number" class="field-input" style="width: 60px;" step="0.1">
+                            <span style="font-size: 12px; color: var(--text-muted);">cm</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Undermining</div>
+                    <div class="tunnel-row">
+                        <span class="field-label">Location:</span>
+                        <input type="text" class="field-input">
+                        <span class="field-label">Depth:</span>
+                        <div class="inline-field">
+                            <input type="number" class="field-input" style="width: 60px;" step="0.1">
+                            <span style="font-size: 12px; color: var(--text-muted);">cm</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Notes</div>
+                    <textarea class="notes-area" placeholder="Additional observations and notes..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

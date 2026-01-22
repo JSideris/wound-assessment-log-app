@@ -1,0 +1,41 @@
+.autosave-status {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a5568;
+  z-index: 1001;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.autosave-status.saving {
+  color: #3182ce;
+  background: rgba(235, 248, 255, 0.95);
+  border-color: #bee3f8;
+}
+
+.autosave-status.saved {
+  color: #38a169;
+  background: rgba(240, 255, 244, 0.95);
+  border-color: #c6f6d5;
+}
+
+.autosave-status.dirty {
+  color: #e53e3e;
+  background: rgba(255, 245, 245, 0.95);
+  border-color: #fed7d7;
+}
+
+.status-icon {
+  font-size: 14px;
+}
